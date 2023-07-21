@@ -9,3 +9,5 @@ Keras==2.7.0
 selenium==4.10.0
 Pillow==9.0.1
 
+# extract Non Bj screenshot.py
+tqdm==4.65.0
