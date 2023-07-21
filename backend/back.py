@@ -36,33 +36,24 @@ def upload():
         if url is None:
             return "URL is missing in the request.", 400
 
+        md5_hash = hashlib.md5((url + str(time.time())).encode()).hexdigest()
+        folder_path = os.path.join('uploads', md5_hash)
+        inputs_folder = os.path.join(folder_path, 'inputs')
+        os.makedirs(inputs_folder, exist_ok=True)
+
         # Check if feature images are present
         if 'feature_images' in request.files:
             feature_images = request.files.getlist('feature_images')
 
-            # Generate MD5 hash for folder name
-            md5_hash = hashlib.md5(url.encode() + time.time()).hexdigest()
-
             # Create the folder structure
-            folder_path = os.path.join('uploads', md5_hash)
-            inputs_folder = os.path.join(folder_path, 'inputs')
             features_folder = os.path.join(folder_path, 'features')
-            os.makedirs(inputs_folder, exist_ok=True)
             os.makedirs(features_folder, exist_ok=True)
 
             # Save feature images
             for image in feature_images:
                 image_path = os.path.join(features_folder, image.filename)
                 image.save(image_path)
-        else:
-            # Generate MD5 hash for folder name
-            md5_hash = hashlib.md5(url.encode()).hexdigest()
-
-            # Create the folder structure
-            folder_path = os.path.join('uploads', md5_hash)
-            inputs_folder = os.path.join(folder_path, 'inputs')
-            os.makedirs(inputs_folder, exist_ok=True)
-
+            
         # Run the screenshot.py script for each size
         script_path = 'screenshot.py'
         sizes = [
