@@ -1,4 +1,11 @@
+# classify. py
 numpy==1.22.3
 opencv-python==4.7.0.72
 scikit-learn==0.22.1
 Keras==2.7.0
+
+# extract mob screenshot.py
+
+selenium==4.10.0
+Pillow==9.0.1
+
