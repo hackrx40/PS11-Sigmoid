@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 from keras.models import load_model
 import time
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -103,10 +104,20 @@ def train():
 
 @app.route('/generate_score', methods=['POST'])
 def generate_score():
-    hash = request.form.hash
+    hash = request.form.get('hash')
+
+    # call the contour thing - inputs vs figma
+
+    # if filters exist: any of button, text, image, link in filters is true
+    # call yolo
+    # filter yolo output with the filters
+    # take IoU with respect to contour
+    # get the percentage
 
     model = load_model(os.path.join('uploads', hash, 'trained_model.h5'))
-    return model(load_images_from_folder(os.path.join('uploads', hash, 'inputs')))
+    model_3 = model.predict(np.array(load_images_from_folder(os.path.join('uploads', hash, 'inputs'))))
+
+    return model_3.tolist(), #contour + yolo percentages
 
 
 if __name__ == '__main__':
