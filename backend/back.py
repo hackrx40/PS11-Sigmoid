@@ -41,13 +41,16 @@ def upload():
             inputs_folder = os.path.join(folder_path, 'inputs')
             os.makedirs(inputs_folder, exist_ok=True)
 
-        # Run the screenshot.py script
+        # Run the screenshot.py script for each size
         script_path = 'screenshot.py'
-        width = 390
-        height = 844
+        sizes = [
+            {'width': 375, 'height': 810, 'device_type': 'Mobile'},
+            {'width': 820, 'height': 1180, 'device_type': 'Tablet'},
+            {'width': 1920, 'height': 1080, 'device_type': 'Web'}
+        ]
 
-        # Pass md5_folder_name as a command-line argument to the screenshot.py script
-        subprocess.call(['python', script_path, url, str(width), str(height), md5_hash])
+        for count, size in enumerate(sizes, 1):
+            subprocess.call(['python', script_path, url, str(size['width']), str(size['height']), md5_hash, size['device_type']])
 
         return md5_hash
 
