@@ -11,6 +11,9 @@ def upload():
         # Get the URL from the request
         url = request.form.get('url')
 
+        if url is None:
+            return "URL is missing in the request.", 400
+
         # Check if feature images are present
         if 'feature_images' in request.files:
             feature_images = request.files.getlist('feature_images')
@@ -42,19 +45,14 @@ def upload():
         script_path = 'screenshot.py'
         width = 390
         height = 844
-        subprocess.call(['python', script_path, url, str(width), str(height)])
 
-        # Move generated screenshots to inputs folder
-        screenshots = os.listdir()
-        for screenshot in screenshots:
-            if screenshot.startswith('screenshot_'):
-                screenshot_path = os.path.join(folder_path, 'inputs', screenshot)
-                os.rename(screenshot, screenshot_path)
+        # Pass md5_folder_name as a command-line argument to the screenshot.py script
+        subprocess.call(['python', script_path, url, str(width), str(height), md5_hash])
 
         return md5_hash
 
     except Exception as e:
-        return f"An error occurred: {str(e)}"
+        return f"An error occurred: {str(e)}", 500
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
