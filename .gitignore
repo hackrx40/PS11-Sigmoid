@@ -1,1 +1,19 @@
 .DS_Store
+
+# Ignore compiled code
+*.class
+*.jar
+*.pyc
+
+# Ignore log files
+*.log
+
+# Ignore build directories
+/build/
+/dist/
+/uploads/
+
+
+# Ignore sensitive data (replace with your actual sensitive files)
+secret_key.txt
+credentials.json
