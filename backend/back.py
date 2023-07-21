@@ -6,12 +6,14 @@ import numpy as np
 from keras.models import load_model
 import time
 import json
+from flask_cors import CORS
 
 from screenshot import take_screenshot
 from comparison import get_contours_diff
 from yolo.entity_extraction import classify_yolo
 
 app = Flask(__name__)
+CORS(app)
 
 
 def load_images_from_folder(folder_path):
@@ -31,7 +33,7 @@ def load_dataset(dataset_path):
     return np.array(images), np.array(labels)
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/api/upload', methods=['POST'])
 def upload():
     try:
         # Get the URL from the request
@@ -64,13 +66,16 @@ def upload():
         for size in sizes:
             take_screenshot(url, size['width'], size['height'], md5_hash, size['device_type'])
 
-        return md5_hash
+        return {
+            'hash': md5_hash,
+            'images': os.listdir(inputs_folder)
+        }
 
     except Exception as e:
         return f"An error occurred: {str(e)}", 500
 
 
-@app.route('/train', methods=['POST'])
+@app.route('/api/train', methods=['POST'])
 def train():
     try:
         # Get the md5 hash from the request
@@ -99,7 +104,7 @@ def train():
         return f"An error occurred: {str(e)}", 500
 
 
-@app.route('/generate_score', methods=['POST'])
+@app.route('/api/generate_score', methods=['POST'])
 def generate_score():
     hash = request.form.get('hash')
 
@@ -114,7 +119,8 @@ def generate_score():
                 cords = regions['coordinates']
                 # get diff
 
-    model = load_model(os.path.join('uploads', hash, 'trained_model.h5'))
+    model_path = os.path.join('uploads', hash, 'trained_model.h5') if os.path.exists(os.path.join('uploads', hash, 'trained_model.h5')) else os.path.join('classify', 'dummy.h5')
+    model = load_model(model_path)
     model_3 = model.predict(np.array(load_images_from_folder(os.path.join('uploads', hash, 'inputs'))))
 
     return [model_3.tolist(), contours_diff] #contour + yolo percentages

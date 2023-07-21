@@ -8,7 +8,7 @@ import os
 def classify_yolo(hash):
     model = YOLO("yolo/model.pt")
     model = YOLO("yolo/weights.pt")
-    data_path = f"figma/{hash}/inputs/"
+    data_path = f"uploads/{hash}/inputs/"
 
     outputs = []
 

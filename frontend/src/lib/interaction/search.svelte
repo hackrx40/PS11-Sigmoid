@@ -24,7 +24,7 @@
 <form
     on:submit={() => dispatch('search', { url, filters, features })}
     use:inview={{ unobserveOnEnter: true }}
-    on:change={({ detail }) => isInView = detail.inView}
+    on:change={({ detail }) => isInView = detail?.inView ?? true}
     class="text-center py-8 pt-32 relative min-h-[500px] w-full text-white flex"
 >
     <img
