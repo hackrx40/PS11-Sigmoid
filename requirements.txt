@@ -12,6 +12,11 @@ Pillow==9.0.1
 # extract Non Bj screenshot.py
 tqdm==4.65.0
 
- ultralytics
+ultralytics
 
- 
+Flask==2.0.1
+opencv-python==4.7.0.72
+numpy==1.22.3
+keras==2.7.0
+
+
