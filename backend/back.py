@@ -5,6 +5,7 @@ from flask import Flask, request
 import cv2
 import numpy as np
 from keras.models import load_model
+import time
 
 app = Flask(__name__)
 
@@ -15,6 +16,7 @@ def load_images_from_folder(folder_path):
         img = cv2.imread(os.path.join(folder_path, filename))
         if img is not None:
             img = cv2.resize(img, (224, 224))  # Resize the images to a common size
+            # img = cv2.resize(img, (375, 810)) # For newer model
             images.append(img)
     return images
 
@@ -39,7 +41,7 @@ def upload():
             feature_images = request.files.getlist('feature_images')
 
             # Generate MD5 hash for folder name
-            md5_hash = hashlib.md5(url.encode()).hexdigest()
+            md5_hash = hashlib.md5(url.encode() + time.time()).hexdigest()
 
             # Create the folder structure
             folder_path = os.path.join('uploads', md5_hash)
@@ -67,7 +69,7 @@ def upload():
             {'width': 375, 'height': 810, 'device_type': 'Mobile'},
         ]
 
-        for count, size in enumerate(sizes, 1):
+        for size in sizes:
             subprocess.call(['python', script_path, url, str(size['width']), str(size['height']), md5_hash, size['device_type']])
 
         return md5_hash
@@ -75,11 +77,12 @@ def upload():
     except Exception as e:
         return f"An error occurred: {str(e)}", 500
 
+
 @app.route('/train', methods=['POST'])
 def train():
     try:
         # Get the md5 hash from the request
-        md5_hash = request.form.get('md5_hash')
+        md5_hash = request.form.get('hash')
 
         if md5_hash is None:
             return "MD5 hash is missing in the request.", 400
@@ -105,6 +108,15 @@ def train():
 
     except Exception as e:
         return f"An error occurred: {str(e)}", 500
+
+
+@app.route('/generate_score', methods=['POST'])
+def generate_score():
+    hash = request.form.hash
+
+    model = load_model(os.path.join('uploads', hash, 'trained_model.h5'))
+    return model(load_images_from_folder(os.path.join('uploads', hash, 'inputs')))
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

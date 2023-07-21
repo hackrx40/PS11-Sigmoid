@@ -5,18 +5,18 @@ from PIL import Image
 from io import BytesIO
 
 def take_screenshot(url, width, height, md5_folder_name, device_type, count):
-    # Configure Selenium WebDriver with EdgeOptions to simulate mobile device
-    opts = webdriver.EdgeOptions()
+    opts = webdriver.ChromeOptions()
     mobile_emulation = {
         "deviceMetrics": { "width": width, "height": height, "pixelRatio": 3.0 },
         "userAgent": "Mozilla/5.0 (Linux; Android 8.0.0; Pixel 2 XL Build/OPD1.170816.004) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Mobile Safari/537.36"
     }
     opts.add_experimental_option("mobileEmulation", mobile_emulation)
-    opts.add_argument('--headless')  # Run the browser in headless mode (without a GUI)
+    opts.add_argument('--headless')
+    opts.add_argument('--no-sandbox')
+    opts.add_argument('--disable-dev-shm-usage')
 
-    # Create a new instance of the Edge browser
-    browser = webdriver.Edge(options=opts)
-    browser.get(url)  # Load the specified URL in the browser
+    browser = webdriver.Chrome(options=opts)
+    browser.get(url)
 
     # Get the total height of the webpage by executing JavaScript in the browser
     js = 'return Math.max( document.body.scrollHeight, document.body.offsetHeight,  document.documentElement.clientHeight,  document.documentElement.scrollHeight,  document.documentElement.offsetHeight);'
