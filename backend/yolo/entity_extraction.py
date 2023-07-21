@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw
 import cv2,os
 model = YOLO('backend/yolo/model.pt')
 model = YOLO('backend/yolo/weights.pt')
-data_path = "/content/drive/MyDrive/Website Screenshots Dataset MIT/Personal Loan PDP/"
+data_path = "backend/yolo/Screenshots/"
 for i in os.listdir(data_path):
     predictions=model.predict(source=data_path+i,save=True)
     #display(Image.open('runs/detect/predict33/cropped_2 (1).png'))#original predictions
