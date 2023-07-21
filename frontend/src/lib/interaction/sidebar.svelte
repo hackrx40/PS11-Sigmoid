@@ -3,6 +3,8 @@
     import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
     import { XIcon } from "svelte-feather-icons";
 
+    export let visible = false;
+
     let feature_images = [], preview_images = [];
     let reference = false, filters = {
         button: true,
@@ -25,7 +27,27 @@
     }
 </script>
 
-<aside class="bg-white p-4 w-[400px] border-l border-primary overflow-y-auto">
+<div
+    on:click={() => visible = false}
+    class={[
+        'fixed top-0 left-0 w-full h-full bg-black/60 backdrop-blur z-10 transition',
+        visible ? '' : 'opacity-0 pointer-events-none'
+    ].join(' ')}
+></div>
+
+<aside
+    class={[
+        'bg-white p-4 w-[400px] border-l border-primary overflow-y-auto fixed top-0 right-0 z-20 h-screen',
+        'overflow-auto transition',
+        visible ? 'translate-x-0' : 'translate-x-full'
+    ].join(' ')}
+>
+    <div class="flex justify-end mb-2">
+        <button type="button" on:click={() => visible = false}>
+            <XIcon />
+        </button>
+    </div>
+
     <Label for="feature_images" class="uppercase text-sm opacity-60 font-bold">Upload Figma designs:</Label>
     <div class="mt-2 text-center">
         <Dropzone
@@ -49,34 +71,4 @@
            {/each}
        </div>
     {/if}
-
-    <Label for="filters" class="uppercase text-sm opacity-60 font-bold mt-6">Filters:</Label>
-    <div class="mt-2 flex flex-col gap-2">
-        <Toggle
-            checked={reference}
-            disabled={!feature_images.length}
-            class={!feature_images.length && 'opacity-50'}
-            on:change={() => reference = !reference}
-        >Enable Reference Comparison</Toggle>
-        <Toggle
-            checked={filters.button}
-            disabled={!reference}
-            class={!reference && 'opacity-50'}
-        >Compare 'Button'</Toggle>
-        <Toggle
-            checked={filters.text}
-            disabled={!reference}
-            class={!reference && 'opacity-50'}
-        >Compare 'Text'</Toggle>
-        <Toggle
-            checked={filters.image}
-            disabled={!reference}
-            class={!reference && 'opacity-50'}
-        >Compare 'Image'</Toggle>
-        <Toggle
-            checked={filters.link}
-            disabled={!reference}
-            class={!reference && 'opacity-50'}
-        >Compare 'Link'</Toggle>
-    </div>
 </aside>
