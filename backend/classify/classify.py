@@ -21,7 +21,7 @@ def load_images_from_folder(folder_path):
     for filename in os.listdir(folder_path):
         img = cv2.imread(os.path.join(folder_path, filename))
         if img is not None:
-            img = cv2.resize(img, (224, 224))  # Resize the images to a common size
+            img = cv2.resize(img, (224, 224))  # Resize the images to a common size (224x224)
             images.append(img)
     return images
 
@@ -52,19 +52,20 @@ X_test = X_test.astype('float32') / 255.0
 
 # Build the CNN model
 model = Sequential()
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)))
-model.add(MaxPooling2D((2, 2)))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2)))
-model.add(Conv2D(128, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2)))
-model.add(Flatten())
-model.add(Dense(128, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)))  # Add the first convolutional layer
+model.add(MaxPooling2D((2, 2)))  # Add the first max pooling layer
+model.add(Conv2D(64, (3, 3), activation='relu'))  # Add the second convolutional layer
+model.add(MaxPooling2D((2, 2)))  # Add the second max pooling layer
+model.add(Conv2D(128, (3, 3), activation='relu'))  # Add the third convolutional layer
+model.add(MaxPooling2D((2, 2)))  # Add the third max pooling layer
+model.add(Flatten())  # Flatten the output from the previous layer
+model.add(Dense(128, activation='relu'))  # Add a fully connected layer with 128 neurons and ReLU activation
+model.add(Dense(1, activation='sigmoid'))  # Add the output layer with a single neuron and sigmoid activation
 
 # Compile the model
 model.compile(optimizer=Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])
 
+# Save the model to 'dummy.h5'
 model.save('dummy.h5')
 
 # Train the model
