@@ -11,3 +11,7 @@ Pillow==9.0.1
 
 # extract Non Bj screenshot.py
 tqdm==4.65.0
+
+ ultralytics
+
+ 
