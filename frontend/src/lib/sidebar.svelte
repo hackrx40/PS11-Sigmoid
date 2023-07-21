@@ -25,7 +25,7 @@
     }
 </script>
 
-<aside class="bg-white border-l p-4 w-[400px]">
+<aside class="bg-white p-4 w-[400px] border-l border-primary overflow-y-auto">
     <Label for="feature_images" class="uppercase text-sm opacity-60 font-bold">Upload Figma designs:</Label>
     <div class="mt-2 text-center">
         <Dropzone
