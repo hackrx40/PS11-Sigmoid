@@ -14,12 +14,12 @@ ultralytics.checks()
 from ultralytics import YOLO
 from PIL import Image, ImageDraw
 
-from google.colab import drive
-drive.mount('/content/drive')
+# from google.colab import drive
+# drive.mount('/content/drive')
 
 import cv2,os
-model = YOLO('/content/drive/MyDrive/Website Screenshots Dataset MIT/yolov8m.pt')
-model = YOLO('/content/drive/MyDrive/Website Screenshots Dataset MIT/best (3).pt')
+model = YOLO('backend/yolo/model.pt')
+model = YOLO('backend/yolo/weights.pt')
 data_path = "/content/drive/MyDrive/Website Screenshots Dataset MIT/Personal Loan PDP/"
 for i in os.listdir(data_path):
     predictions=model.predict(source=data_path+i,save=True)
