@@ -39,6 +39,7 @@
 		"flowbite": "^1.7.0",
 		"flowbite-svelte": "^0.39.3",
 		"sass": "^1.63.6",
+		"svelte-inview": "^4.0.1",
 		"tailwind-merge": "^1.13.2"
 	}
 }
