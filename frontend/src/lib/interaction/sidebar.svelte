@@ -5,17 +5,17 @@
     import { slide } from 'svelte/transition';
 
     export let visible = false;
-
-    let feature_images = [], preview_images = [];
+    export let features = [];
+    let preview_images = [];
 
     const handleFilesSelect = (e) => {
         const { acceptedFiles } = e.detail;
-        feature_images = [...feature_images, ...acceptedFiles];
+        features = [...features, ...acceptedFiles];
         preview_images = [...preview_images, ...acceptedFiles.map(file => URL.createObjectURL(file))];
     }
 
     const removeImage = (index) => {
-        feature_images = feature_images.filter((_, i) => i !== index);
+        features = features.filter((_, i) => i !== index);
         preview_images = preview_images.filter((_, i) => i !== index);
     }
 </script>
@@ -41,7 +41,7 @@
         </button>
     </div>
 
-    <Label for="feature_images" class="uppercase text-sm opacity-60 font-bold">Upload Figma designs:</Label>
+    <Label for="features" class="uppercase text-sm opacity-60 font-bold">Upload Figma designs:</Label>
     <div class="mt-2 text-center">
         <Dropzone
             on:drop={handleFilesSelect}
