@@ -5,21 +5,33 @@
 
     export let loading = false;
     export let results = [];
+    export let similarity = null;
 
     onMount(() => windowWidth = window.innerWidth);
 </script>
 
 {#if results.length}
-    <div class="container mx-auto px-4 py-6 grid grid-col-6 gap-4">
-        {#each results as image}
-            <img
-                class="rounded-full shadow transition hover:shadow-lg"
-                src={image}
-                alt="Mobile"
-                width="375"
-                height="810"
-                draggable="false"
-            />
+    <div class="container mx-auto px-4 py-12 grid grid-cols-6 gap-6">
+        {#each results as image, i}
+            <div class="relative rounded-lg overflow-hidden shadow transition hover:shadow-lg">
+                <img
+                    src={image}
+                    alt="Mobile"
+                    width="375"
+                    height="810"
+                    draggable="false"
+                />
+
+                {#if similarity}
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+                        <div class="text-sm font-semibold opacity-80 whitespace-nowrap">Look and Feel:</div>
+                        <div class="text-xl font-semibold">{(similarity[0][i] * 100).toFixed(2)}</div>
+
+                        <div class="text-sm font-semibold opacity-80 whitespace-nowrap mt-2">Pixel comparison:</div>
+                        <div class="text-xl font-semibold">{(similarity[1][i] * 100).toFixed(2)}</div>
+                    </div>
+                {/if}
+            </div>
         {/each}
     </div>
 {:else}

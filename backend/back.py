@@ -123,7 +123,7 @@ def generate_score():
     model = load_model(model_path)
     model_3 = model.predict(np.array(load_images_from_folder(os.path.join('uploads', hash, 'inputs'))))
 
-    return [model_3.tolist(), contours_diff] #contour + yolo percentages
+    return [model_3.flatten().tolist(), contours_diff] #contour + yolo percentages
 
 
 if __name__ == '__main__':

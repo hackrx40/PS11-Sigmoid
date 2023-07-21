@@ -49,7 +49,7 @@
                 <div class="relative w-full" in:fly={{ y: 40, x: -30, delay: 150 }}>
                     <input
                         type="url"
-                        class="w-full rounded-full pl-6 pr-12 py-2 text-lg outline-none transition focus:shadow-lg"
+                        class="w-full rounded-full pl-6 pr-12 py-2 text-lg outline-none transition focus:shadow-lg bg-white"
                         id="search"
                         placeholder="Enter URL here..."
                         bind:value={url}

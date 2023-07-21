@@ -2,7 +2,7 @@
     import Search from '$lib/interaction/search.svelte';
     import Output from '$lib/interaction/output.svelte';
 
-    let loading = false, results = [];
+    let loading = false, results = [], similarity = null;
 
     const search = async ({ detail }) => {
         const url = import.meta.env.VITE_PUBLIC_BACKEND_URL;
@@ -33,12 +33,12 @@
             body: formData
         })
         data = await data.json();
-        console.log(data);
+        similarity = data;
 
         loading = false;
     }
 </script>
 
 <Search on:search={search} />
-<Output loading={loading} results={results} />
+<Output loading={loading} results={results} similarity={similarity} />
 
