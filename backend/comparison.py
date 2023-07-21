@@ -40,6 +40,7 @@ def get_contours_diff(hash):
         os.makedirs(output_folder_path)
 
     scores = []
+    regions = []
 
     # Loop through images in the first folder
     for filename in os.listdir(folder1_path):
@@ -73,6 +74,7 @@ def get_contours_diff(hash):
             diff = cv2.absdiff(gray1, gray2_resized)
             _, thresh = cv2.threshold(diff, 25, 255, cv2.THRESH_BINARY)
             contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            regions.append(contours)
             for contour in contours:
                 if cv2.contourArea(contour) > 150:
                     x, y, w, h = cv2.boundingRect(contour)
@@ -90,5 +92,5 @@ def get_contours_diff(hash):
                 f.write(f"Similarity Percentage: {best_score:.2f}\n")
             scores.append(best_score)
 
-    return scores
+    return scores, regions
 

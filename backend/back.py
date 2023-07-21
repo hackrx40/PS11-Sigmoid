@@ -5,8 +5,11 @@ import cv2
 import numpy as np
 from keras.models import load_model
 import time
+import json
+
 from screenshot import take_screenshot
 from comparison import get_contours_diff
+from yolo.entity_extraction import classify_yolo
 
 app = Flask(__name__)
 
@@ -101,13 +104,15 @@ def generate_score():
     hash = request.form.get('hash')
 
     # call the contour thing - inputs vs figma
-    contours_diff = get_contours_diff(hash)
+    contours_diff, regions = get_contours_diff(hash)
 
-    # if filters exist: any of button, text, image, link in filters is true
-    # call yolo
-    # filter yolo output with the filters
-    # take IoU with respect to contour
-    # get the percentage
+    filters = json.loads(request.form.get('filters'))
+    if any(filters.values()):
+        regions = classify_yolo(hash)
+        for region in regions:
+            if filters[region['type']]:
+                cords = regions['coordinates']
+                # get diff
 
     model = load_model(os.path.join('uploads', hash, 'trained_model.h5'))
     model_3 = model.predict(np.array(load_images_from_folder(os.path.join('uploads', hash, 'inputs'))))
