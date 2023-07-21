@@ -1,12 +1,12 @@
 import os
 import hashlib
-import subprocess
 from flask import Flask, request
 import cv2
 import numpy as np
 from keras.models import load_model
 import time
-from PIL import Image
+from screenshot import take_screenshot
+from comparison import get_contours_diff
 
 app = Flask(__name__)
 
@@ -56,13 +56,10 @@ def upload():
                 image.save(image_path)
             
         # Run the screenshot.py script for each size
-        script_path = 'screenshot.py'
-        sizes = [
-            {'width': 375, 'height': 810, 'device_type': 'Mobile'},
-        ]
+        sizes = [ {'width': 375, 'height': 810, 'device_type': 'mobile'} ]
 
         for size in sizes:
-            subprocess.call(['python', script_path, url, str(size['width']), str(size['height']), md5_hash, size['device_type']])
+            take_screenshot(url, size['width'], size['height'], md5_hash, size['device_type'])
 
         return md5_hash
 
@@ -87,9 +84,6 @@ def train():
         model_path = os.path.join('classify', 'dummy.h5')
         model = load_model(model_path)
 
-        # Train the model on the feature images
-        # (You need to implement the training logic based on your model architecture and data)
-        # For example: model.fit(images, labels, ...)
         model.fit(images, labels)
 
         # Save the trained model inside the md5 folder
@@ -107,6 +101,7 @@ def generate_score():
     hash = request.form.get('hash')
 
     # call the contour thing - inputs vs figma
+    contours_diff = get_contours_diff(hash)
 
     # if filters exist: any of button, text, image, link in filters is true
     # call yolo
@@ -117,8 +112,8 @@ def generate_score():
     model = load_model(os.path.join('uploads', hash, 'trained_model.h5'))
     model_3 = model.predict(np.array(load_images_from_folder(os.path.join('uploads', hash, 'inputs'))))
 
-    return model_3.tolist(), #contour + yolo percentages
+    return [model_3.tolist(), contours_diff] #contour + yolo percentages
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8000)

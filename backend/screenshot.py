@@ -4,7 +4,7 @@ from selenium import webdriver
 from PIL import Image
 from io import BytesIO
 
-def take_screenshot(url, width, height, md5_folder_name, device_type, count):
+def take_screenshot(url, width, height, md5_folder_name, device_type, count = 1):
     opts = webdriver.ChromeOptions()
     mobile_emulation = {
         "deviceMetrics": { "width": width, "height": height, "pixelRatio": 3.0 },
@@ -37,23 +37,10 @@ def take_screenshot(url, width, height, md5_folder_name, device_type, count):
         offset += viewport_height
 
         # Save each slice as a separate image in the "inputs" folder under the md5_folder_name
-        image_name = f"{device_type}_{count}.png"
+        image_name = f'{device_type}_{count}.png'
         image_path = os.path.join('uploads', md5_folder_name, 'inputs', image_name)
         img.save(image_path)
 
         count += 1
 
-    browser.quit()  # Close the browser after capturing all screenshots
-
-if __name__ == "__main__":
-    if len(sys.argv) != 6:
-        print("Usage: python screenshot.py <url> <width> <height> <md5_folder_name> <device_type>")
-        sys.exit(1)
-
-    url = sys.argv[1]  # Get the URL from the command-line argument
-    width = int(sys.argv[2])  # Get the width from the command-line argument and convert to an integer
-    height = int(sys.argv[3])  # Get the height from the command-line argument and convert to an integer
-    md5_folder_name = sys.argv[4]  # Get the MD5 folder name from the command-line argument
-    device_type = sys.argv[5]  # Get the device type from the command-line argument
-
-    take_screenshot(url, width, height, md5_folder_name, device_type, 1)  # Call the function to take the screenshot
+    browser.quit() 
