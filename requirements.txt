@@ -1,22 +1,11 @@
-# classify. py
 numpy==1.22.3
 opencv-python==4.7.0.72
 scikit-learn==0.22.1
 Keras==2.7.0
-
-# extract mob screenshot.py
-
 selenium==4.10.0
 Pillow==9.0.1
-
-# extract Non Bj screenshot.py
 tqdm==4.65.0
-
 ultralytics
-
 Flask==2.0.1
-opencv-python==4.7.0.72
-numpy==1.22.3
-keras==2.7.0
-
-
+scikit-image==0.22.0
+flask-cors==3.0.10
