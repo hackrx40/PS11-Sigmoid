@@ -21,15 +21,20 @@ def load_images_from_folder(folder_path):
     for filename in os.listdir(folder_path):
         img = cv2.imread(os.path.join(folder_path, filename))
         if img is not None:
-            img = cv2.resize(img, (224, 224))  # Resize the images to a common size
-            # img = cv2.resize(img, (375, 810)) # For newer model
-            images.append(img)
+            external_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
+
+            # Resize the image to match the input size of the model
+            target_size = (240, 518)
+            external_image = cv2.resize(external_image, target_size)
+            external_image = external_image.astype('float32') / 255.0
+
+            images.append(external_image)
     return images
 
 
 def load_dataset(dataset_path):
     images = load_images_from_folder(dataset_path)
-    labels = [1] * len(images)
+    labels = [0] * len(images)
     return np.array(images), np.array(labels)
 
 
@@ -111,6 +116,8 @@ def train():
         if md5_hash is None:
             return "MD5 hash is missing in the request.", 400
 
+        return "Skipped"
+
         # Load the feature images from the "features" subdirectory
         folder_path = os.path.join('uploads', md5_hash, 'features')
         images, labels = load_dataset(folder_path)
@@ -170,7 +177,7 @@ def generate_score():
     model = load_model(model_path)
     model_3 = model.predict(np.array(load_images_from_folder(os.path.join('uploads', hash, 'inputs'))))
 
-    return [model_3.flatten().tolist(), contours_diff] #contour + yolo percentages
+    return [model_3.flatten().tolist(), contours_diff]
 
 
 if __name__ == '__main__':

@@ -13,24 +13,25 @@
 {#if results.length}
     <div class="container mx-auto px-4 py-12 grid grid-cols-6 gap-6">
         {#each results as image, i}
-            <div class="relative rounded-lg overflow-hidden shadow transition hover:shadow-lg">
+            <div class="relative">
+                {#if similarity}
+                    <div class="text-center mb-4">
+                        <div class="text-sm font-semibold opacity-80 whitespace-nowrap">Look and Feel:</div>
+                        <div class="text-xl font-semibold">{((1 - similarity[0][i]) * 100).toFixed(2)}</div>
+
+                        <div class="text-sm font-semibold opacity-80 whitespace-nowrap mt-2">Pixel comparison:</div>
+                        <div class="text-xl font-semibold">{((1 - similarity[1][i]) * 100).toFixed(2)}</div>
+                    </div>
+                {/if}
+
                 <img
+                    class="shadow transition hover:shadow-lg rounded-lg"
                     src={image}
                     alt="Mobile"
                     width="375"
                     height="810"
                     draggable="false"
                 />
-
-                {#if similarity}
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                        <div class="text-sm font-semibold opacity-80 whitespace-nowrap">Look and Feel:</div>
-                        <div class="text-xl font-semibold">{(similarity[0][i] * 100).toFixed(2)}</div>
-
-                        <div class="text-sm font-semibold opacity-80 whitespace-nowrap mt-2">Pixel comparison:</div>
-                        <div class="text-xl font-semibold">{(similarity[1][i] * 100).toFixed(2)}</div>
-                    </div>
-                {/if}
             </div>
         {/each}
     </div>
