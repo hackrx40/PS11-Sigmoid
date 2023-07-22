@@ -159,19 +159,11 @@ def generate_score():
                         highest_iou = max(calculate_iou(contour, cords), highest_iou)
 
                 if highest_iou > 0.2:
-                    local_excludes.append(i)
+                    local_excludes.append(contour)
 
             excludes.append(local_excludes)
 
-        # Update the similarity score
-        for i, file in enumerate(excludes):
-            total_area = 0
-            for index in file:
-                region = regions[i][index]
-                total_area += region[2] * region[3]
-            
-            coverage = total_area / (810 * 375)
-            contours_diff[i] += coverage
+        contours_diff, _ = get_contours_diff(hash, excludes)
 
     model_path = os.path.join('uploads', hash, 'trained_model.h5') if os.path.exists(os.path.join('uploads', hash, 'trained_model.h5')) else os.path.join('classify', 'classify.keras')
     model = load_model(model_path)

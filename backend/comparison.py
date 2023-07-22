@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from skimage.metrics import structural_similarity as ssim
 
-def calculate_ssim(img1, img2):
+def calculate_ssim(img1, img2, excludes = None):
     # Resize images to the same dimensions
     img2_resized = cv2.resize(img2, (img1.shape[1], img1.shape[0]))
 
@@ -11,12 +11,22 @@ def calculate_ssim(img1, img2):
     gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(img2_resized, cv2.COLOR_BGR2GRAY)
 
+    # Create masks for each image
+    mask1 = np.ones_like(gray1)
+    mask2 = np.ones_like(gray2)
+    if excludes:
+        for cord in excludes:
+            x, y, w, h = cord
+            mask1[y:y+h, x:x+w] = 0
+            mask2[y:y+h, x:x+w] = 0
+
     # Calculate the SSIM between the two images
-    (score, _) = ssim(gray1, gray2, full=True)
+    (score, _) = ssim(gray1, gray2, full=True, gradient=False, mask1=mask1, mask2=mask2)
 
     return score
 
-def find_best_match(input_image, folder_path):
+
+def find_best_match(input_image, folder_path, excludes = None):
     best_score = -1
     best_match = None
     for filename in os.listdir(folder_path):
@@ -27,10 +37,10 @@ def find_best_match(input_image, folder_path):
                 best_score = score
                 best_match = img2
 
-    return best_match, best_score
+    return best_match, calculate_ssim(input_image, best_match, excludes) if excludes else best_score
 
 
-def get_contours_diff(hash):
+def get_contours_diff(hash, excludes = None):
     folder1_path = f'uploads/{hash}/inputs'
     folder2_path = 'figma'
     output_folder_path = f'uploads/{hash}/outputs'
@@ -43,12 +53,12 @@ def get_contours_diff(hash):
     global_regions = []
 
     # Loop through images in the first folder
-    for filename in os.listdir(folder1_path):
+    for i, filename in enumerate(os.listdir(folder1_path)):
         regions = []
         img1 = cv2.imread(os.path.join(folder1_path, filename))
         if img1 is not None:
             # Find the best match in the second folder
-            best_match, best_score = find_best_match(img1, folder2_path)
+            best_match, best_score = find_best_match(img1, folder2_path, excludes[i] if excludes else None)
 
             # Resize the best_match to the same height as img1
             best_match_resized = cv2.resize(best_match, (img1.shape[1], img1.shape[0]))

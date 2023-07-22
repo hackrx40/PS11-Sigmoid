@@ -20,7 +20,7 @@
                         <div class="text-xl font-semibold">{((1 - similarity[0][i]) * 100).toFixed(2)}</div>
 
                         <div class="text-sm font-semibold opacity-80 whitespace-nowrap mt-2">Pixel comparison:</div>
-                        <div class="text-xl font-semibold">{((1 - similarity[1][i]) * 100).toFixed(2)}</div>
+                        <div class="text-xl font-semibold">{(similarity[1][i]).toFixed(2)}</div>
                     </div>
                 {/if}
 
