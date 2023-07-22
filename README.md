@@ -4,14 +4,15 @@
 
 Our design team has created a visual design language that is followed by the app and
 website. This is laid down in the Figma designs that describe how the screens would look
-like on app, web (mobile) and web (desktop). The website and app screens are developed
+on the app, web (mobile), and web (desktop). The website and app screens are developed
 against this library of components as documented in Figma. There are predefined rules
-(font size, padding, number of text lines, etc.). For every component that define how the
+(font size, padding, number of text lines, etc.). For every component that defines how the
 component will look on desktop and mobile viewports.
 
 # Bajaj- HackRx 4.0
 
-<p align="center"><img src="https://www.google.com/imgres?imgurl=https%3A%2F%2Fpixlok.com%2Fwp-content%2Fuploads%2F2021%2F04%2FBajaj-Finserv-Logo-PNG.jpg&tbnid=UtBCmcHxV9eHbM&vet=12ahUKEwiY0bjrr6GAAxVL_zgGHeTGCOcQMygBegUIARCdAQ..i&imgrefurl=https%3A%2F%2Fpixlok.com%2Fimages%2Fbajaj-finserv-logo-png-free-download%2F&docid=a7NhE5J99Q1s0M&w=1200&h=1200&q=Bajaj%20Finserv%20Logo%20PNG&ved=2ahUKEwiY0bjrr6GAAxVL_zgGHeTGCOcQMygBegUIARCdAQ" height="200" width="300"></p>
+![alt text](https://www.google.com/imgres?imgurl=https%3A%2F%2Fpixlok.com%2Fwp-content%2Fuploads%2F2021%2F04%2FBajaj-Finserv-Logo-PNG.jpg&tbnid=UtBCmcHxV9eHbM&vet=12ahUKEwiY0bjrr6GAAxVL_zgGHeTGCOcQMygBegUIARCdAQ..i&imgrefurl=https%3A%2F%2Fpixlok.com%2Fimages%2Fbajaj-finserv-logo-png-free-download%2F&docid=a7NhE5J99Q1s0M&w=1200&h=1200&q=Bajaj%20Finserv%20Logo%20PNG&ved=2ahUKEwiY0bjrr6GAAxVL_zgGHeTGCOcQMygBegUIARCdAQ")
+
 
 ## Features
 
