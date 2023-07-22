@@ -116,21 +116,16 @@ def train():
         if md5_hash is None:
             return "MD5 hash is missing in the request.", 400
 
-        return "Skipped"
-
         # Load the feature images from the "features" subdirectory
         folder_path = os.path.join('uploads', md5_hash, 'features')
         images, labels = load_dataset(folder_path)
 
         # Load the saved model (dummy.h5)
-        model_path = os.path.join('classify', 'dummy.h5')
+        model_path = os.path.join('classify', 'classify.keras')
         model = load_model(model_path)
 
         model.fit(images, labels)
-
-        # Save the trained model inside the md5 folder
-        trained_model_path = os.path.join('uploads', md5_hash, 'trained_model.h5')
-        model.save(trained_model_path)
+        model.save(model_path)
 
         return f"Model trained and saved successfully in the folder {md5_hash}."
 
@@ -165,8 +160,7 @@ def generate_score():
 
         contours_diff, _ = get_contours_diff(hash, excludes)
 
-    model_path = os.path.join('uploads', hash, 'trained_model.h5') if os.path.exists(os.path.join('uploads', hash, 'trained_model.h5')) else os.path.join('classify', 'classify.keras')
-    model = load_model(model_path)
+    model = load_model(os.path.join('classify', 'classify.keras'))
     model_3 = model.predict(np.array(load_images_from_folder(os.path.join('uploads', hash, 'inputs'))))
 
     return [model_3.flatten().tolist(), contours_diff]

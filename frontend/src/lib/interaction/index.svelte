@@ -23,10 +23,7 @@
         formData = new FormData;
         formData.append('hash', hash);
         formData.append('filters', JSON.stringify(detail.filters));
-        if (detail.features.length) {
-            data = await fetch(`${url}/api/train`, { method: 'POST', body: formData });
-            await data.json();
-        }
+        if (detail.features.length) await fetch(`${url}/api/train`, { method: 'POST', body: formData });
 
         data = await fetch(`${url}/api/generate_score`, {
             method: 'POST',
