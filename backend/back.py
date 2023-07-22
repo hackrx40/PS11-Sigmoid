@@ -166,7 +166,7 @@ def generate_score():
             coverage = total_area / (810 * 375)
             contours_diff[i] += coverage
 
-    model_path = os.path.join('uploads', hash, 'trained_model.h5') if os.path.exists(os.path.join('uploads', hash, 'trained_model.h5')) else os.path.join('classify', 'dummy.h5')
+    model_path = os.path.join('uploads', hash, 'trained_model.h5') if os.path.exists(os.path.join('uploads', hash, 'trained_model.h5')) else os.path.join('classify', 'classify.keras')
     model = load_model(model_path)
     model_3 = model.predict(np.array(load_images_from_folder(os.path.join('uploads', hash, 'inputs'))))
 
