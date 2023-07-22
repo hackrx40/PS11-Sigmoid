@@ -33,6 +33,33 @@ def load_dataset(dataset_path):
     return np.array(images), np.array(labels)
 
 
+def calculate_iou(box1, box2):
+    # Calculate the coordinates of the intersection rectangle
+    x1 = max(box1[0], box2[0])
+    y1 = max(box1[1], box2[1])
+    x2 = min(box1[2], box2[2])
+    y2 = min(box1[3], box2[3])
+
+    # Check for non-overlapping rectangles
+    if x2 < x1 or y2 < y1:
+        return 0.0
+
+    # Calculate the area of the intersection rectangle
+    intersection_area = (x2 - x1 + 1) * (y2 - y1 + 1)
+
+    # Calculate the areas of both bounding boxes
+    box1_area = (box1[2] - box1[0] + 1) * (box1[3] - box1[1] + 1)
+    box2_area = (box2[2] - box2[0] + 1) * (box2[3] - box2[1] + 1)
+
+    # Calculate the Union area by adding the areas of both bounding boxes and subtracting the intersection area
+    union_area = box1_area + box2_area - intersection_area
+
+    # Calculate the IoU
+    iou = intersection_area / union_area
+
+    return iou
+
+
 @app.route('/api/upload', methods=['POST'])
 def upload():
     try:
@@ -113,11 +140,31 @@ def generate_score():
 
     filters = json.loads(request.form.get('filters'))
     if any(filters.values()):
-        regions = classify_yolo(hash)
-        for region in regions:
-            if filters[region['type']]:
-                cords = regions['coordinates']
-                # get diff
+        excludes = []
+        yolo_regions = classify_yolo(hash)
+        for file in regions:
+            local_excludes = []
+            for i, contour in enumerate(file):
+                highest_iou = 0
+                for region in yolo_regions:
+                    if region['type'] in filters and filters[region['type']]:
+                        cords = region['coordinates']
+                        highest_iou = max(calculate_iou(contour, cords), highest_iou)
+
+                if highest_iou > 0.2:
+                    local_excludes.append(i)
+
+            excludes.append(local_excludes)
+
+        # Update the similarity score
+        for i, file in enumerate(excludes):
+            total_area = 0
+            for index in file:
+                region = regions[i][index]
+                total_area += region[2] * region[3]
+            
+            coverage = total_area / (810 * 375)
+            contours_diff[i] += coverage
 
     model_path = os.path.join('uploads', hash, 'trained_model.h5') if os.path.exists(os.path.join('uploads', hash, 'trained_model.h5')) else os.path.join('classify', 'dummy.h5')
     model = load_model(model_path)

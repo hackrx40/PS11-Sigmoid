@@ -30,3 +30,5 @@ def classify_yolo(hash):
                     'type': b[class_id],
                     'coordinates': cords
                 })
+
+    return outputs
